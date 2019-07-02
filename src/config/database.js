@@ -1,8 +1,9 @@
 module.exports = {
   dialect: 'mysql',
   host: 'localhost',
-  username: 'mysql',
-  password: 'meet',
+  port: 42333,
+  username: 'meetuser',
+  password: 'meetuser@1234',
   database: 'meetapp',
   define: {
     timestamps: true,
