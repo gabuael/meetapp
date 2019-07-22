@@ -83,6 +83,24 @@ class MeetupController {
       id: req.params.id,
     });
   }
+
+  async delete(req, res) {
+    const meetup = await Meetup.findByPk(req.params.id);
+    if (meetup.user_id !== req.userId) {
+      return res
+        .status(400)
+        .json({ error: 'O usuário não é o organizador desse meetup' });
+    }
+
+    if (isBefore(meetup.date, new Date())) {
+      return res.status(400).json({
+        error: 'O meetup não pode mais ser cancelado, devido ao horário',
+      });
+    }
+
+    await meetup.destroy();
+    return res.json({ ok: 'Meetup deletado' });
+  }
 }
 
 export default new MeetupController();
