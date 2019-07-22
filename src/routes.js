@@ -3,6 +3,7 @@ import { Router } from 'express';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import MeetupController from './app/controllers/MeetupController';
+import MyMeetupController from './app/controllers/MyMeetupController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -17,5 +18,7 @@ routes.put('/users', UserController.update);
 
 routes.post('/meetups', MeetupController.store);
 routes.put('/meetups/:id', MeetupController.update);
+
+routes.get('/my-meetups', MyMeetupController.index);
 
 export default routes;
