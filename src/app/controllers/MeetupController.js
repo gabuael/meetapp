@@ -53,6 +53,11 @@ class MeetupController {
     }
 
     const meetup = await Meetup.findByPk(req.params.id);
+
+    if (!meetup) {
+      return res.status(400).json({ error: 'Meetup não existe' });
+    }
+
     if (meetup.user_id !== req.userId) {
       return res
         .status(400)
@@ -86,6 +91,11 @@ class MeetupController {
 
   async delete(req, res) {
     const meetup = await Meetup.findByPk(req.params.id);
+
+    if (!meetup) {
+      return res.status(400).json({ error: 'Meetup não existe' });
+    }
+
     if (meetup.user_id !== req.userId) {
       return res
         .status(400)
