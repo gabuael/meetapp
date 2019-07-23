@@ -9,6 +9,12 @@ class Meetup extends Model {
         localizacao: Sequelize.STRING,
         date: Sequelize.DATE,
         banner: Sequelize.STRING,
+        url: {
+          type: Sequelize.VIRTUAL,
+          get() {
+            return `http://localhost:3333/banners/${this.banner}`;
+          },
+        },
       },
       {
         sequelize,
