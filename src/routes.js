@@ -7,6 +7,7 @@ import SessionController from './app/controllers/SessionController';
 import MeetupController from './app/controllers/MeetupController';
 import MyMeetupController from './app/controllers/MyMeetupController';
 import BannerController from './app/controllers/BannerController';
+import InscricaoController from './app/controllers/InscricaoController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -31,5 +32,7 @@ routes.post(
   upload.single('file'),
   BannerController.store
 );
+
+routes.post('/inscricoes', InscricaoController.store);
 
 export default routes;
