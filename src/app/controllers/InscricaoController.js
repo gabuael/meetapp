@@ -1,8 +1,11 @@
 import { isBefore } from 'date-fns';
 import { Op, Sequelize } from 'sequelize';
+
 import Meetup from '../models/Meetup';
 import Inscricao from '../models/Inscricao';
 import User from '../models/User';
+
+import Mail from '../../lib/Mail';
 
 class InscricaoController {
   async index(req, res) {
@@ -30,7 +33,9 @@ class InscricaoController {
   }
 
   async store(req, res) {
-    const meetup = await Meetup.findByPk(req.body.meetup_id);
+    const meetup = await Meetup.findByPk(req.body.meetup_id, {
+      include: [{ model: User, attributes: ['email'] }],
+    });
     if (!meetup) {
       return res.status(400).json({ error: 'Meetup não existe' });
     }
@@ -79,6 +84,13 @@ class InscricaoController {
     const inscricao = await Inscricao.create({
       meetup_id: req.body.meetup_id,
       inscrito_id: req.userId,
+    });
+
+    const user = await User.findByPk(req.userId);
+    await Mail.sendMail({
+      to: `Senhor <${meetup.User.email}>`,
+      subject: 'Nova inscrição',
+      text: `Usuario de email ${user.email} inscrito no seu meetup`,
     });
 
     return res.json(inscricao);
