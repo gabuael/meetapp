@@ -1,5 +1,5 @@
 import { isBefore } from 'date-fns';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import Meetup from '../models/Meetup';
 import Inscricao from '../models/Inscricao';
 import User from '../models/User';
@@ -24,6 +24,7 @@ class InscricaoController {
           ],
         },
       ],
+      order: [Sequelize.col('date')],
     });
     return res.json(inscricoes);
   }
