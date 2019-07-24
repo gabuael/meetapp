@@ -1,8 +1,33 @@
 import { isBefore } from 'date-fns';
+import { Op } from 'sequelize';
 import Meetup from '../models/Meetup';
 import Inscricao from '../models/Inscricao';
+import User from '../models/User';
 
 class InscricaoController {
+  async index(req, res) {
+    const inscricoes = await Inscricao.findAll({
+      where: { inscrito_id: req.userId },
+      attributes: ['id'],
+      include: [
+        {
+          model: Meetup,
+          where: {
+            date: { [Op.gte]: new Date() },
+          },
+          attributes: ['id', 'titulo', 'descricao', 'date', 'banner', 'url'],
+          include: [
+            {
+              model: User,
+              attributes: ['email'],
+            },
+          ],
+        },
+      ],
+    });
+    return res.json(inscricoes);
+  }
+
   async store(req, res) {
     const meetup = await Meetup.findByPk(req.body.meetup_id);
     if (!meetup) {

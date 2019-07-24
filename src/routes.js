@@ -34,6 +34,7 @@ routes.post(
   BannerController.store
 );
 
+routes.get('/inscricoes', InscricaoController.index);
 routes.post('/inscricoes', InscricaoController.store);
 
 export default routes;
