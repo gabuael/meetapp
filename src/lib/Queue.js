@@ -1,4 +1,6 @@
 import Bee from 'bee-queue';
+import * as Sentry from '@sentry/node';
+
 import InscricaoMail from '../app/jobs/InscricaoMail';
 import redisConfig from '../config/redis';
 
@@ -30,8 +32,12 @@ class Queue {
     jobs.forEach(job => {
       const { bee, handle } = this.queues[job.key];
 
-      bee.process(handle);
+      bee.on('failed', this.handleFailure).process(handle);
     });
+  }
+
+  handleFailure(job, err) {
+    Sentry.captureException(err);
   }
 }
 
