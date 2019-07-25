@@ -37,6 +37,9 @@ class Queue {
   }
 
   handleFailure(job, err) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Queue ${job.queue.name}: FAILED`, err);
+    }
     Sentry.captureException(err);
   }
 }
