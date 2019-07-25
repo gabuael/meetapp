@@ -4,8 +4,8 @@ import { Op, Sequelize } from 'sequelize';
 import Meetup from '../models/Meetup';
 import Inscricao from '../models/Inscricao';
 import User from '../models/User';
-
-import Mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+import InscricaoMail from '../jobs/InscricaoMail';
 
 class InscricaoController {
   async index(req, res) {
@@ -87,10 +87,10 @@ class InscricaoController {
     });
 
     const user = await User.findByPk(req.userId);
-    await Mail.sendMail({
-      to: `Senhor <${meetup.User.email}>`,
-      subject: 'Nova inscrição',
-      text: `Usuario de email ${user.email} inscrito no seu meetup`,
+
+    await Queue.add(InscricaoMail.key, {
+      user,
+      meetup,
     });
 
     return res.json(inscricao);
